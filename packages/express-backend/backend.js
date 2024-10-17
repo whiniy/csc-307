@@ -44,6 +44,7 @@ const users = {
 			name: "Dennis",
 			job: "Bartender"
 		}
+
 	]
 };
 
