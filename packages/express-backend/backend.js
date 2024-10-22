@@ -68,22 +68,28 @@ const addUser = (user) => {
 	return user;
 };
 
-app.get("/users", (req, res) => {
-	const name = req.query.name;
-	if (name != undefined) {
-		let result = findUserByName(name);
-		result = {users_list: result};
-		res.send(result);
+const deleteUserById = (id) => {
+	const i = users["users_list"].findIndex((user) =>
+		user["id"] === id);
+
+	if (i != -1) {
+		users["users_list"].splice(i, 1);
+		return true;
 	} else {
-		res.send(users);
+		return false;
 	}
-});
+};
 
 app.get("/users", (req, res) => {
 	const name = req.query.name;
 	const job = req.query.job;
+
 	if (name != undefined && job != undefined) {
 		let result = findUserByNameAndJob(name, job);
+		result = {users_list: result};
+		res.send(result);
+	} else if (name != undefined) {
+		let result = findUserByName(name);
 		result = {users_list: result};
 		res.send(result);
 	} else {
@@ -110,14 +116,12 @@ app.post("/users", (req, res) => {
 
 app.delete("/users/:id", (req, res) => {
 	const id = req.params["id"]
-	const len = users.users_list.length;
-
-	users.users_list = users.users_list.filter(user => user.id !== userId);
+	const isDeleted = deleteUserById(id);
 	
-	if (users.users_list.length < len) {
-		res.status(200).send({ message: 'User deleted successfully.' });
+	if (isDeleted) {
+		res.status(200).send(`User ${id} successfully deleted.`);
 	} else {
-		res.status(404).send({ message: 'User not found.' });
+		res.status(404).send("User not found.");
 	}
 });
 
