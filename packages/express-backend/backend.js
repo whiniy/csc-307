@@ -113,7 +113,6 @@ app.post("/users", (req, res) => {
 app.delete("/users/:id", (req, res) => {
 	const id = req.params["id"]
 	const isDeleted = deleteUserById(id);
-
 	
 	if (isDeleted) {
 		res.status(200).send(`User ${id} successfully deleted.`);
